@@ -1,33 +1,59 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { StateType, TaskItem } from "./types";
 
-export interface StateType {
-  name: string;
-  description: string;
-  time: string;
-}
-
-const initialState = {
-  name: "",
-  description: "",
-  time: "",
-};
-
-export const todoSlice = createSlice({
+export const toDoSlice = createSlice({
   name: "todoItem",
-  initialState,
+  initialState: { tasks: [], tasksDone: [] } as StateType,
   reducers: {
-    input: (
-      state: StateType,
-      action: PayloadAction<{
-        field: keyof StateType;
-        value: string;
-      }>
+    loadState: (_, { payload }: PayloadAction<StateType>) => {
+      return payload;
+    },
+    addTask: (
+      state,
+      { payload }: PayloadAction<Pick<TaskItem, "name" | "description">>
     ) => {
-      state[action.payload.field] = action.payload.value;
+      state.tasks.unshift({
+        id: Date.now(),
+        name: payload.name,
+        description: payload.description,
+        date: Date.now(),
+      });
+    },
+    remove: (
+      state,
+      { payload }: PayloadAction<{ id: number; done: boolean }>
+    ) => {
+      const listName = payload.done ? "tasksDone" : "tasks";
+
+      const list = state[listName];
+
+      const index = list.findIndex(({ id }) => id === payload.id);
+
+      if (index !== -1) {
+        list.splice(index, 1);
+      }
+    },
+    toggleDone: (
+      state,
+      { payload }: PayloadAction<{ id: number; done: boolean }>
+    ) => {
+      const listName = payload.done ? "tasksDone" : "tasks";
+      const listNameAnother = payload.done ? "tasks" : "tasksDone";
+
+      const list = state[listName];
+      const listAnother = state[listNameAnother];
+
+      const index = list.findIndex(({ id }) => id === payload.id);
+
+      if (index !== -1) {
+        const item = list[index];
+        list.splice(index, 1);
+        listAnother.splice(1, 0, item);
+      }
     },
   },
 });
 
-export const { input } = todoSlice.actions;
+export const { loadState, addTask, remove, toggleDone } = toDoSlice.actions;
 
-export default todoSlice.reducer;
+export default toDoSlice.reducer;

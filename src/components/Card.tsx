@@ -1,39 +1,64 @@
-// import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import checkMarck from "../images/checkMark.svg";
+import { remove, toggleDone } from "../redux/toDoSlise";
+import { TaskItem } from "../redux/types";
+import { handlerData } from "./utils";
 
-function Card() {
-  // const todoItem = useSelector((state) => state.todoItem);
+function Card({ task, done }: { task: TaskItem; done: boolean }) {
+  const dispatch = useDispatch();
+
+  function handleToggleDone() {
+    dispatch(toggleDone({ id: task.id, done: done }));
+  }
+
+  function removeTask() {
+    dispatch(remove({ id: task.id, done: done }));
+  }
 
   return (
-    <Container>
-      {/* <div>
+    <Container done={done}>
+      <div>
         <label>
-          <Checkbox type="checkbox" />
-          <Title>{todoItem.name}</Title>
+          <Checkbox
+            type="checkbox"
+            onChange={handleToggleDone}
+            checked={done}
+          />
+          <Title done={done}>{task.name}</Title>
         </label>
-        <Description>{todoItem.description}</Description>
+        <Description>{task.description}</Description>
       </div>
-      <Time>{todoItem.time}</Time> */}
+      <ButtonsAndDate>
+        <div>
+          <Button>Изменить</Button>
+          <Button onClick={removeTask}>Удалить</Button>
+        </div>
+        <Time done={done}>{handlerData(task.date)}</Time>
+      </ButtonsAndDate>
     </Container>
   );
 }
 
 export default Card;
 
-const Container = styled.div`
+const Container = styled.div<{ done: boolean }>`
   width: 100%;
   height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: #a7023c05;
+  background: ${({ done }) => (done ? "#3b0d8205" : "#a7023c05")};
   box-sizing: border-box;
-  border: 1px solid #a7023c50;
+  border: 1px solid ${({ done }) => (done ? "#3b0d8250" : "#a7023c50")};
   border-radius: 5px;
   outline: none;
   margin: 10px 0 0 0;
   padding: 10px;
+
+  :hover {
+    box-shadow: 0 0 3px 2px ${({ done }) => (done ? "#3b0d8250" : "#a7023c50")};
+  }
 `;
 
 const Checkbox = styled.input`
@@ -51,12 +76,13 @@ const Checkbox = styled.input`
   }
 `;
 
-const Title = styled.div`
+const Title = styled.div<{ done: boolean }>`
   font-size: 22px;
   line-height: 24px;
   position: relative;
   font-weight: 500;
-  color: #a7023c;
+  color: ${({ done }) => (done ? "#3b0d82" : "#a7023c")};
+  text-decoration: ${({ done }) => (done ? "line-through" : "none")};;
   cursor: pointer;
   margin: 0 10px 5px 0;
   padding: 0 0 0 30px;
@@ -72,6 +98,12 @@ const Title = styled.div`
     border-radius: 5px;
     content: "";
   }
+
+  :hover {
+    ::before {
+      border: 1px solid #a7023c;
+    }
+  }
 `;
 
 const Description = styled.p`
@@ -83,12 +115,31 @@ const Description = styled.p`
   margin: 0;
 `;
 
-const Time = styled.p`
+const ButtonsAndDate = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
+const Button = styled.button`
+  display: inline-block;
+  background: transparent;
+  border: none;
+  outline: none;
   font-size: 12px;
   line-height: 14px;
   font-weight: 300;
   font-style: italic;
+  color: #a0ba02;
+  margin: 0 20px 0 0;
+  padding: 0;
+`;
+
+const Time = styled.p<{ done: boolean }>`
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 300;
   text-align: end;
-  color: #000000;
+  color: ${({ done }) => (done ? "#3b0d82" : "#a7023c")};
   margin: 0;
 `;

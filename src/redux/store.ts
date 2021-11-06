@@ -1,11 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
-import todoReducer from "./todoSlise";
-
+import toDoReducer from "./toDoSlise";
 
 const store = configureStore({
   reducer: {
-    todoItem: todoReducer,
+    toDo: toDoReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

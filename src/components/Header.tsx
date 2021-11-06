@@ -1,5 +1,5 @@
 import styled from "styled-components/macro";
-import logo from "../images/logo.gif";
+import logo from "../images/logo.png";
 
 function Header() {
   return (
