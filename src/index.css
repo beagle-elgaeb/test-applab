@@ -1,0 +1,7 @@
+body {
+  width: 300px;
+ font-family: "Fira Sans", Tahoma, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0 auto;
+}
