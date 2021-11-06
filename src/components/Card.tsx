@@ -1,20 +1,20 @@
+// import { useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import checkMarck from "../images/checkMark.svg";
 
 function Card() {
+  // const todoItem = useSelector((state) => state.todoItem);
+
   return (
     <Container>
-      <div>
+      {/* <div>
         <label>
           <Checkbox type="checkbox" />
-          <Title>Сделать ToDoList</Title>
+          <Title>{todoItem.name}</Title>
         </label>
-        <Description>
-          Какое-то описание на 2 строки не более. Какое-то описание на 2 строки
-          не более
-        </Description>
+        <Description>{todoItem.description}</Description>
       </div>
-      <Time>6 ноя 15:16</Time>
+      <Time>{todoItem.time}</Time> */}
     </Container>
   );
 }
@@ -78,6 +78,7 @@ const Description = styled.p`
   font-size: 14px;
   line-height: 16px;
   font-weight: 400;
+  hyphens: auto;
   color: #000000;
   margin: 0;
 `;

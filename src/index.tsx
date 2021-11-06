@@ -1,15 +1,19 @@
+import "@fontsource/fira-sans";
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import "./index.css";
 import App from "./components/App";
+import "./index.css";
+import store from "./redux/store";
 import reportWebVitals from "./reportWebVitals";
-import "@fontsource/fira-sans";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
