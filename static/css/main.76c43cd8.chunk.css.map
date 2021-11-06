@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/index.css"],"names":[],"mappings":"AAAA,KACE,WAAY,CACb,iDAAqD,CACpD,kCAAmC,CACnC,iCAAkC,CAClC,aACF","file":"main.76c43cd8.chunk.css","sourcesContent":["body {\n  width: 300px;\n font-family: \"Fira Sans\", Tahoma, Verdana, sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  margin: 0 auto;\n}\n"]}
