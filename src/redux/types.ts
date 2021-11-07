@@ -1,4 +1,4 @@
-export interface RedaxState {
+export interface ReduxState {
   toDo: StateType;
 }
 

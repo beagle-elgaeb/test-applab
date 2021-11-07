@@ -15,18 +15,23 @@ const names = [
   "дек",
 ];
 
+// Ф-я handlerData возвращает дату-время:
+// в формате "ЧЧ:ММ", если задача создана сегодня
+// в формате "Д МММ ЧЧ:ММ", если задача создана в течение года
+// в формате "Д МММ ГГГГ ЧЧ:ММ", если задача старше года
 export function handlerData(timestamp: number) {
   function getMonth(date: Date) {
     return names[date.getMonth()];
   }
 
   const now = new Date();
-  const date = new Date(timestamp);
 
   const dayNow = now.getDate().toString();
   const monthNow = getMonth(now);
   const yearNow = now.getFullYear();
   const dateNow = `${dayNow} ${monthNow} ${yearNow}`;
+
+  const date = new Date(timestamp);
 
   const day = date.getDate().toString();
   const month = getMonth(date);
@@ -49,6 +54,10 @@ export function handlerData(timestamp: number) {
   return dateTask;
 }
 
+// Ф-я handleValidation возвращает состояние валидированности:
+// для поля ввода названия задачи, если оно не пустое, не превышает 20 символов, уникальное
+// для поля ввода описания задачи, если оно не пустое, не превышает 70 символов
+// для обоих полей, если они оба валидны
 export function handleValidation(
   name: string,
   description: string,
@@ -71,15 +80,11 @@ export function handleValidation(
     nameIsValid = false;
   }
 
-  if (description.length === 0 || description.length > 80) {
+  if (description.length === 0 || description.length > 70) {
     descriptionIsValid = false;
   }
 
-  if (
-    nameIsValid !== true ||
-    descriptionIsValid !== true ||
-    originalName !== true
-  ) {
+  if (nameIsValid !== true || descriptionIsValid !== true) {
     isValid = false;
   }
 

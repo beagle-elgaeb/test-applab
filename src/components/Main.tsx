@@ -2,14 +2,12 @@ import { FormEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import { addTask } from "../redux/toDoSlise";
-import { RedaxState } from "../redux/types";
+import { ReduxState } from "../redux/types";
 import Card from "./Card";
 import { handleValidation } from "./utils";
 
 function Main() {
-  const dispatch = useDispatch();
-  const { tasks, tasksDone } = useSelector((state: RedaxState) => state.toDo);
-
+  // Управление инпутами
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
@@ -21,12 +19,24 @@ function Main() {
     setDescription(evt.currentTarget.value);
   };
 
+  // Состояние инпутов
+  const [focusIsLost, setFocusIsLost] = useState(false);
+
+  // Использование данных из стейта
+  const { tasks, tasksDone } = useSelector((state: ReduxState) => state.toDo);
+
+  // Передача данных в стейт
+  const dispatch = useDispatch();
+
   function handleSubmit(evt: FormEvent) {
     evt.preventDefault();
     dispatch(addTask({ name, description }));
     setName("");
     setDescription("");
+    setFocusIsLost(false);
   }
+
+  const checkValidation = handleValidation(name, description, tasks, tasksDone);
 
   return (
     <Container>
@@ -36,36 +46,31 @@ function Main() {
           type="text"
           name="name"
           value={name}
-          placeholder="* Задача - обязательно и оригинально"
+          placeholder="Название - от 1 до 20 символов и уникальное"
           onChange={handleChangeName}
+          onBlur={lossFocus}
           autoComplete="off"
           maxLength={20}
           required
-          valid={
-            handleValidation(name, description, tasks, tasksDone).nameIsValid
-          }
+          valid={focusIsLost ? checkValidation.nameIsValid : true}
         />
         <Input
           aria-label="Описание"
           type="text"
           name="description"
           value={description}
-          placeholder="* Описание задачи - обязательно"
+          placeholder="Описание - от 1 до 70 символов"
           onChange={handleChangeDescription}
+          onBlur={lossFocus}
           autoComplete="off"
-          maxLength={80}
+          maxLength={70}
           required
-          valid={
-            handleValidation(name, description, tasks, tasksDone)
-              .descriptionIsValid
-          }
+          valid={focusIsLost ? checkValidation.descriptionIsValid : true}
         />
 
         <Button
           type="submit"
-          disabled={
-            !handleValidation(name, description, tasks, tasksDone).isValid
-          }
+          disabled={focusIsLost ? !checkValidation.isValid : false}
         >
           Добавить
         </Button>
@@ -82,6 +87,11 @@ function Main() {
       </div>
     </Container>
   );
+
+  // Вспомогательные функции
+  function lossFocus() {
+    setFocusIsLost(true);
+  }
 }
 
 export default Main;
@@ -109,8 +119,8 @@ const Input = styled.input<{ valid: boolean }>`
   padding: 0 10px 0 10px;
 
   ::placeholder {
-    font-size: 15px;
-    color: #a0ba0260;
+    font-size: 13px;
+    color: #a0ba0280;
     text-transform: lowercase;
   }
 

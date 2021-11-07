@@ -3,24 +3,33 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import checkMarck from "../images/checkMark.svg";
 import { remove, toggleDone, update } from "../redux/toDoSlise";
-import { RedaxState, TaskItem } from "../redux/types";
+import { ReduxState, TaskItem } from "../redux/types";
 import { handlerData, handleValidation } from "./utils";
 
 function Card({ task, done }: { task: TaskItem; done: boolean }) {
-  const dispatch = useDispatch();
-  const { tasks, tasksDone } = useSelector((state: RedaxState) => state.toDo);
-
-  const [updated, setUpdated] = useState(false);
+  // Управление инпутами
   const [name, setName] = useState(task.name);
   const [description, setDescription] = useState(task.description);
 
-  const handleChangeName = (evt: React.FormEvent<HTMLInputElement>) => {
+  function handleChangeName(evt: React.FormEvent<HTMLInputElement>) {
     setName(evt.currentTarget.value);
-  };
+  }
 
-  const handleChangeDescription = (evt: React.FormEvent<HTMLInputElement>) => {
+  function handleChangeDescription(evt: React.FormEvent<HTMLInputElement>) {
     setDescription(evt.currentTarget.value);
-  };
+  }
+
+  // Состояние инпутов
+  const [focusIsLost, setFocusIsLost] = useState(false);
+
+  // Состояние задачи (дерактируемая или нет)
+  const [updated, setUpdated] = useState(false);
+
+  // Использование данных из стейта
+  const { tasks, tasksDone } = useSelector((state: ReduxState) => state.toDo);
+
+  // Передача данных в стейт
+  const dispatch = useDispatch();
 
   function handleToggleDone() {
     dispatch(toggleDone({ id: task.id, done: done }));
@@ -30,18 +39,13 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
     dispatch(remove({ id: task.id, done: done }));
   }
 
-  function handleEdit() {
-    setUpdated(true);
-  }
-
   function handleUpdate() {
     dispatch(update({ id: task.id, done: done, name, description }));
     setUpdated(false);
   }
 
-  function cancelEditing() {
-    setUpdated(false);
-  }
+  // Информация о валидности полей
+  const checkValidation = handleValidation(name, description, tasks, tasksDone);
 
   return (
     <Container done={done}>
@@ -53,15 +57,13 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
               type="text"
               name="name"
               value={name}
-              placeholder="* Задача - обязательно и оригинально"
+              placeholder="Название - от 1 до 20 символов и уникальное"
               onChange={handleChangeName}
+              onBlur={lossFocus}
               autoComplete="off"
               maxLength={20}
               required
-              valid={
-                handleValidation(name, description, tasks, tasksDone)
-                  .nameIsValid
-              }
+              valid={focusIsLost ? checkValidation.nameIsValid : true}
             />
           </label>
 
@@ -70,15 +72,13 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
             type="text"
             name="description"
             value={description}
-            placeholder="* Описание задачи - обязательно"
+            placeholder="Описание - от 1 до 70 символов"
             onChange={handleChangeDescription}
+            onBlur={lossFocus}
             autoComplete="off"
-            maxLength={80}
+            maxLength={70}
             required
-            valid={
-              handleValidation(name, description, tasks, tasksDone)
-                .descriptionIsValid
-            }
+            valid={focusIsLost ? checkValidation.descriptionIsValid : true}
           />
         </form>
       ) : (
@@ -102,9 +102,7 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
           <div>
             <ButtonSave
               onClick={handleUpdate}
-              disabled={
-                !handleValidation(name, description, tasks, tasksDone).isValid
-              }
+              disabled={focusIsLost ? !checkValidation.isValid : false}
             >
               Сохранить
             </ButtonSave>
@@ -121,6 +119,19 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
       </ButtonsAndDate>
     </Container>
   );
+
+  // Вспомогательные функции
+  function handleEdit() {
+    setUpdated(true);
+  }
+
+  function cancelEditing() {
+    setUpdated(false);
+  }
+
+  function lossFocus() {
+    setFocusIsLost(true);
+  }
 }
 
 export default Card;
@@ -177,7 +188,7 @@ const Input = styled.input<{ valid: boolean }>`
   padding: 0 10px 0 10px;
 
   ::placeholder {
-    font-size: 14px;
+    font-size: 12px;
     color: #a0ba0260;
     text-transform: lowercase;
   }

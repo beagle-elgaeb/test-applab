@@ -24,9 +24,7 @@ export const toDoSlice = createSlice({
       { payload }: PayloadAction<{ id: number; done: boolean }>
     ) => {
       const listName = payload.done ? "tasksDone" : "tasks";
-
       const list = state[listName];
-
       const index = list.findIndex(({ id }) => id === payload.id);
 
       if (index !== -1) {
@@ -45,9 +43,7 @@ export const toDoSlice = createSlice({
       }>
     ) => {
       const listName = payload.done ? "tasksDone" : "tasks";
-
       const list = state[listName];
-
       const index = list.findIndex(({ id }) => id === payload.id);
 
       if (index !== -1) {
