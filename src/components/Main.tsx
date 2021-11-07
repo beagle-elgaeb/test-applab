@@ -4,6 +4,7 @@ import styled from "styled-components/macro";
 import { addTask } from "../redux/toDoSlise";
 import { RedaxState } from "../redux/types";
 import Card from "./Card";
+import { handleValidation } from "./utils";
 
 function Main() {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ function Main() {
 
   return (
     <Container>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <Input
           aria-label="Название"
           type="text"
@@ -37,7 +38,9 @@ function Main() {
           value={name}
           placeholder="Задача"
           onChange={handleChangeName}
+          autoComplete="off"
           maxLength={20}
+          required
         />
         <Input
           aria-label="Описание"
@@ -46,9 +49,11 @@ function Main() {
           value={description}
           placeholder="Описание задачи"
           onChange={handleChangeDescription}
-          maxLength={60}
+          autoComplete="off"
+          maxLength={80}
+          required
         />
-        <Button type="submit" disable={false}>
+        <Button type="submit" disabled={!handleValidation(name, description)}>
           Добавить
         </Button>
       </form>
@@ -105,19 +110,19 @@ const Input = styled.input`
   }
 `;
 
-const Button = styled.button<{ disable: boolean }>`
+const Button = styled.button<{ disabled: boolean }>`
   width: 50%;
   height: 30px;
   display: block;
   background: #a0ba0210;
   box-sizing: border-box;
-  border: ${({ disable }) => (disable ? "none" : "1px solid #a0ba0270")};
+  border: ${({ disabled }) => (disabled ? "none" : "1px solid #a0ba0270")};
   border-radius: 5px;
   outline: none;
   font-size: 18px;
   line-height: 20px;
   font-weight: 300;
-  color: ${({ disable }) => (disable ? "#7d8b2430" : "#7d8b24")};
+  color: ${({ disabled }) => (disabled ? "#7d8b2430" : "#7d8b24")};
   margin: 10px 0 0 auto;
   padding: 0;
 

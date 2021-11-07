@@ -33,6 +33,30 @@ export const toDoSlice = createSlice({
         list.splice(index, 1);
       }
     },
+    update: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        id: number;
+        done: boolean;
+        name: string;
+        description: string;
+      }>
+    ) => {
+      const listName = payload.done ? "tasksDone" : "tasks";
+
+      const list = state[listName];
+
+      const index = list.findIndex(({ id }) => id === payload.id);
+
+      if (index !== -1) {
+        const item = list[index];
+        item.name = payload.name;
+        item.description = payload.description;
+        item.date = Date.now();
+      }
+    },
     toggleDone: (
       state,
       { payload }: PayloadAction<{ id: number; done: boolean }>
@@ -54,6 +78,7 @@ export const toDoSlice = createSlice({
   },
 });
 
-export const { loadState, addTask, remove, toggleDone } = toDoSlice.actions;
+export const { loadState, addTask, remove, update, toggleDone } =
+  toDoSlice.actions;
 
 export default toDoSlice.reducer;

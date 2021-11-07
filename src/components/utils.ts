@@ -46,3 +46,12 @@ export function handlerData(timestamp: number) {
 
   return dateTask;
 }
+
+export function handleValidation(name: string, description: string) {
+  return !(
+    name.length === 0 ||
+    name.length > 20 ||
+    description.length === 0 ||
+    description.length > 80
+  );
+}
