@@ -13,3 +13,5 @@ export interface TaskItem {
   description: string;
   date: number;
 }
+
+export type ListName = "tasks" | "tasksDone";

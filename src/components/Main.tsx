@@ -1,11 +1,16 @@
 import { FormEvent, useState } from "react";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import { addTask, reorder } from "../redux/toDoSlise";
-import { ReduxState } from "../redux/types";
+import { ListName, ReduxState } from "../redux/types";
 import Card from "./Card";
 import { validateForm } from "./utils";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 function Main() {
   // Управление инпутами
@@ -44,15 +49,16 @@ function Main() {
   const checkValidation = validateForm(name, description, tasks, tasksDone);
 
   // Перемещение карточек
-  function onDragEnd(
-    result: { source: { index: number }; destination?: { index: number } },
-    done: boolean
-  ) {
+
+  function onDragEnd(result: DropResult) {
     if (!result.destination) {
       return;
     }
 
-    if (result.destination.index === result.source.index) {
+    if (
+      result.destination.droppableId === result.source.droppableId &&
+      result.destination.index === result.source.index
+    ) {
       return;
     }
 
@@ -60,7 +66,8 @@ function Main() {
       reorder({
         startIndex: result.source.index,
         endIndex: result.destination.index,
-        done: done,
+        startList: result.source.droppableId as ListName,
+        endList: result.destination.droppableId as ListName,
       })
     );
   }
@@ -103,8 +110,8 @@ function Main() {
         </Button>
       </form>
 
-      <DragDropContext onDragEnd={(result) => onDragEnd(result, false)}>
-        <Droppable droppableId="list">
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="tasks">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {tasks.map((task, i) => (
@@ -113,13 +120,18 @@ function Main() {
                   index={i}
                   key={task.id}
                 >
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...(provided.draggableProps as any)}
                       {...provided.dragHandleProps}
                     >
-                      <Card key={task.id} task={task} done={false} />
+                      <Card
+                        key={task.id}
+                        task={task}
+                        done={false}
+                        isDragging={snapshot.isDragging}
+                      />
                     </div>
                   )}
                 </Draggable>
@@ -128,10 +140,8 @@ function Main() {
             </div>
           )}
         </Droppable>
-      </DragDropContext>
 
-      <DragDropContext onDragEnd={(result) => onDragEnd(result, true)}>
-        <Droppable droppableId="list">
+        <Droppable droppableId="tasksDone">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {tasksDone.map((task, i) => (
@@ -140,13 +150,18 @@ function Main() {
                   index={i}
                   key={task.id}
                 >
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...(provided.draggableProps as any)}
                       {...provided.dragHandleProps}
                     >
-                      <Card key={task.id} task={task} done={true} />
+                      <Card
+                        key={task.id}
+                        task={task}
+                        done={true}
+                        isDragging={snapshot.isDragging}
+                      />
                     </div>
                   )}
                 </Draggable>

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StateType, TaskItem } from "./types";
+import { ListName, StateType, TaskItem } from "./types";
 
 export const toDoSlice = createSlice({
   name: "todoItem",
@@ -75,13 +75,21 @@ export const toDoSlice = createSlice({
       state,
       {
         payload,
-      }: PayloadAction<{ startIndex: number; endIndex: number; done: boolean }>
+      }: PayloadAction<{
+        startIndex: number;
+        endIndex: number;
+        startList: ListName;
+        endList: ListName;
+      }>
     ) => {
-      const listName = payload.done ? "tasksDone" : "tasks";
-      const list = state[listName];
+      const startListName = payload.startList;
+      const endListName = payload.endList;
 
-      const [removed] = list.splice(payload.startIndex, 1);
-      list.splice(payload.endIndex, 0, removed);
+      const startList = state[startListName];
+      const endList = state[endListName];
+
+      const [removed] = startList.splice(payload.startIndex, 1);
+      endList.splice(payload.endIndex, 0, removed);
     },
   },
 });

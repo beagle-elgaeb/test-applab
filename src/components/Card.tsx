@@ -6,7 +6,15 @@ import { remove, toggleDone, update } from "../redux/toDoSlise";
 import { ReduxState, TaskItem } from "../redux/types";
 import { formatData, validateForm } from "./utils";
 
-function Card({ task, done }: { task: TaskItem; done: boolean }) {
+function Card({
+  task,
+  done,
+  isDragging,
+}: {
+  task: TaskItem;
+  done: boolean;
+  isDragging?: boolean;
+}) {
   // Управление инпутами
   const [name, setName] = useState(task.name);
   const [description, setDescription] = useState(task.description);
@@ -60,7 +68,7 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
   const checkValidation = validateForm(name, description, tasks, tasksDone);
 
   return (
-    <Container done={done}>
+    <Container done={done} isDragging={isDragging}>
       {updated ? (
         <form noValidate>
           <label>
@@ -135,22 +143,25 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
 
 export default Card;
 
-const Container = styled.div<{ done: boolean }>`
+const Container = styled.div<{ done: boolean; isDragging?: boolean }>`
   width: 100%;
   height: 120px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: ${({ done }) => (done ? "#3b0d8205" : "#a7023c05")};
-  box-sizing: border-box;
+  background: ${({ done }) => (done ? "#f9f5f9" : "#fdfafb")};
   border: 1px solid ${({ done }) => (done ? "#3b0d8250" : "#a7023c50")};
   border-radius: 5px;
   outline: none;
+  box-shadow: ${({ done, isDragging }) =>
+    isDragging ? `4px 4px 5px 0 ${done ? "#3b0d8250" : "#a7023c50"}` : "none"};
   margin: 10px 0 0 0;
   padding: 10px;
 
   :hover {
-    box-shadow: 0 0 3px 2px ${({ done }) => (done ? "#3b0d8250" : "#a7023c50")};
+    box-shadow: ${({ done, isDragging }) =>
+      isDragging ? "none" : `0 0 3px 2px ${done ? "#3b0d8250" : "#a7023c50"}`};
   }
 `;
 
