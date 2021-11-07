@@ -1,3 +1,5 @@
+import { TaskItem } from "../redux/types";
+
 const names = [
   "янв",
   "фев",
@@ -47,11 +49,39 @@ export function handlerData(timestamp: number) {
   return dateTask;
 }
 
-export function handleValidation(name: string, description: string) {
-  return !(
-    name.length === 0 ||
-    name.length > 20 ||
-    description.length === 0 ||
-    description.length > 80
-  );
+export function handleValidation(
+  name: string,
+  description: string,
+  tasks: TaskItem[],
+  tasksDone: TaskItem[]
+) {
+  let isValid = true;
+  let nameIsValid = true;
+  let originalName = true;
+  let descriptionIsValid = true;
+
+  if (
+    tasks.find((task) => task.name === name) !== undefined ||
+    tasksDone.find((task) => task.name === name) !== undefined
+  ) {
+    originalName = false;
+  }
+
+  if (name.length === 0 || name.length > 20 || originalName !== true) {
+    nameIsValid = false;
+  }
+
+  if (description.length === 0 || description.length > 80) {
+    descriptionIsValid = false;
+  }
+
+  if (
+    nameIsValid !== true ||
+    descriptionIsValid !== true ||
+    originalName !== true
+  ) {
+    isValid = false;
+  }
+
+  return { isValid, nameIsValid, descriptionIsValid };
 }

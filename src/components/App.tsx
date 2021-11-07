@@ -20,6 +20,7 @@ function App() {
         dispatch(loadState(JSON.parse(savedState)));
       } catch {}
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

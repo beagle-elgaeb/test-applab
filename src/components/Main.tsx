@@ -36,24 +36,37 @@ function Main() {
           type="text"
           name="name"
           value={name}
-          placeholder="Задача"
+          placeholder="* Задача - обязательно и оригинально"
           onChange={handleChangeName}
           autoComplete="off"
           maxLength={20}
           required
+          valid={
+            handleValidation(name, description, tasks, tasksDone).nameIsValid
+          }
         />
         <Input
           aria-label="Описание"
           type="text"
           name="description"
           value={description}
-          placeholder="Описание задачи"
+          placeholder="* Описание задачи - обязательно"
           onChange={handleChangeDescription}
           autoComplete="off"
           maxLength={80}
           required
+          valid={
+            handleValidation(name, description, tasks, tasksDone)
+              .descriptionIsValid
+          }
         />
-        <Button type="submit" disabled={!handleValidation(name, description)}>
+
+        <Button
+          type="submit"
+          disabled={
+            !handleValidation(name, description, tasks, tasksDone).isValid
+          }
+        >
           Добавить
         </Button>
       </form>
@@ -78,14 +91,14 @@ const Container = styled.div`
   margin: 0;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ valid: boolean }>`
   width: 100%;
   height: 30px;
   background: transparent;
   box-sizing: border-box;
   border: none;
-  border-bottom: 1px solid #a0ba0250;
-  border-left: 1px solid #a0ba0250;
+  border-bottom: 1px solid ${({ valid }) => (valid ? "#a0ba0250" : "#D3366E50")};
+  border-left: 1px solid ${({ valid }) => (valid ? "#a0ba0250" : "#D3366E50")};
   border-radius: 5px;
   outline: none;
   font-size: 16px;
@@ -96,6 +109,7 @@ const Input = styled.input`
   padding: 0 10px 0 10px;
 
   ::placeholder {
+    font-size: 15px;
     color: #a0ba0260;
     text-transform: lowercase;
   }

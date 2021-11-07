@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import checkMarck from "../images/checkMark.svg";
-import { remove, update, toggleDone } from "../redux/toDoSlise";
-import { TaskItem } from "../redux/types";
+import { remove, toggleDone, update } from "../redux/toDoSlise";
+import { RedaxState, TaskItem } from "../redux/types";
 import { handlerData, handleValidation } from "./utils";
 
 function Card({ task, done }: { task: TaskItem; done: boolean }) {
   const dispatch = useDispatch();
+  const { tasks, tasksDone } = useSelector((state: RedaxState) => state.toDo);
 
   const [updated, setUpdated] = useState(false);
   const [name, setName] = useState(task.name);
@@ -38,61 +39,84 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
     setUpdated(false);
   }
 
+  function cancelEditing() {
+    setUpdated(false);
+  }
+
   return (
     <Container done={done}>
-      <div>
-        <label>
-          <Checkbox
-            type="checkbox"
-            onChange={handleToggleDone}
-            checked={done}
-          />
-          {updated ? (
+      {updated ? (
+        <form noValidate>
+          <label>
             <Input
               aria-label="Название"
               type="text"
               name="name"
               value={name}
-              placeholder="Задача"
+              placeholder="* Задача - обязательно и оригинально"
               onChange={handleChangeName}
               autoComplete="off"
               maxLength={20}
               required
+              valid={
+                handleValidation(name, description, tasks, tasksDone)
+                  .nameIsValid
+              }
             />
-          ) : (
-            <Title done={done}>{task.name}</Title>
-          )}
-        </label>
-        {updated ? (
+          </label>
+
           <Input
             aria-label="Описание"
             type="text"
             name="description"
             value={description}
-            placeholder="Описание задачи"
+            placeholder="* Описание задачи - обязательно"
             onChange={handleChangeDescription}
             autoComplete="off"
             maxLength={80}
             required
+            valid={
+              handleValidation(name, description, tasks, tasksDone)
+                .descriptionIsValid
+            }
           />
-        ) : (
-          <Description>{task.description}</Description>
-        )}
-      </div>
-      <ButtonsAndDate>
+        </form>
+      ) : (
         <div>
-          {updated ? (
+          <label>
+            <Checkbox
+              type="checkbox"
+              onChange={handleToggleDone}
+              checked={done}
+            />
+
+            <Title done={done}>{task.name}</Title>
+          </label>
+
+          <Description>{task.description}</Description>
+        </div>
+      )}
+
+      <ButtonsAndDate>
+        {updated ? (
+          <div>
             <ButtonSave
               onClick={handleUpdate}
-              disabled={!handleValidation(name, description)}
+              disabled={
+                !handleValidation(name, description, tasks, tasksDone).isValid
+              }
             >
               Сохранить
             </ButtonSave>
-          ) : (
+            <Button onClick={cancelEditing}>Отменить</Button>
+          </div>
+        ) : (
+          <div>
             <Button onClick={handleEdit}>Изменить</Button>
-          )}
-          <Button onClick={handleRemoveTask}>Удалить</Button>
-        </div>
+            <Button onClick={handleRemoveTask}>Удалить</Button>
+          </div>
+        )}
+
         <Time done={done}>{handlerData(task.date)}</Time>
       </ButtonsAndDate>
     </Container>
@@ -135,14 +159,14 @@ const Checkbox = styled.input`
   }
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ valid: boolean }>`
   width: 100%;
   height: 24px;
   background: #ffffff;
   box-sizing: border-box;
   border: none;
-  border-bottom: 1px solid #a0ba0250;
-  border-left: 1px solid #a0ba0250;
+  border-bottom: 1px solid ${({ valid }) => (valid ? "#a0ba0250" : "#D3366E50")};
+  border-left: 1px solid ${({ valid }) => (valid ? "#a0ba0250" : "#D3366E50")};
   border-radius: 5px;
   outline: none;
   font-size: 16px;
@@ -153,6 +177,7 @@ const Input = styled.input`
   padding: 0 10px 0 10px;
 
   ::placeholder {
+    font-size: 14px;
     color: #a0ba0260;
     text-transform: lowercase;
   }
