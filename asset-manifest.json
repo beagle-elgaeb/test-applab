@@ -1,27 +1,27 @@
 {
   "files": {
     "main.css": "/test-applab/static/css/main.76c43cd8.chunk.css",
-    "main.js": "/test-applab/static/js/main.3e467ed6.chunk.js",
-    "main.js.map": "/test-applab/static/js/main.3e467ed6.chunk.js.map",
-    "runtime-main.js": "/test-applab/static/js/runtime-main.a1505118.js",
-    "runtime-main.js.map": "/test-applab/static/js/runtime-main.a1505118.js.map",
+    "main.js": "/test-applab/static/js/main.a7667424.chunk.js",
+    "main.js.map": "/test-applab/static/js/main.a7667424.chunk.js.map",
+    "runtime-main.js": "/test-applab/static/js/runtime-main.da06ef22.js",
+    "runtime-main.js.map": "/test-applab/static/js/runtime-main.da06ef22.js.map",
     "static/css/2.181c7d96.chunk.css": "/test-applab/static/css/2.181c7d96.chunk.css",
-    "static/js/2.c6f6a037.chunk.js": "/test-applab/static/js/2.c6f6a037.chunk.js",
-    "static/js/2.c6f6a037.chunk.js.map": "/test-applab/static/js/2.c6f6a037.chunk.js.map",
-    "static/js/3.52678c1f.chunk.js": "/test-applab/static/js/3.52678c1f.chunk.js",
-    "static/js/3.52678c1f.chunk.js.map": "/test-applab/static/js/3.52678c1f.chunk.js.map",
+    "static/js/2.aab6235d.chunk.js": "/test-applab/static/js/2.aab6235d.chunk.js",
+    "static/js/2.aab6235d.chunk.js.map": "/test-applab/static/js/2.aab6235d.chunk.js.map",
+    "static/js/3.7c7c7ee5.chunk.js": "/test-applab/static/js/3.7c7c7ee5.chunk.js",
+    "static/js/3.7c7c7ee5.chunk.js.map": "/test-applab/static/js/3.7c7c7ee5.chunk.js.map",
     "index.html": "/test-applab/index.html",
     "static/css/2.181c7d96.chunk.css.map": "/test-applab/static/css/2.181c7d96.chunk.css.map",
     "static/css/main.76c43cd8.chunk.css.map": "/test-applab/static/css/main.76c43cd8.chunk.css.map",
-    "static/js/2.c6f6a037.chunk.js.LICENSE.txt": "/test-applab/static/js/2.c6f6a037.chunk.js.LICENSE.txt",
+    "static/js/2.aab6235d.chunk.js.LICENSE.txt": "/test-applab/static/js/2.aab6235d.chunk.js.LICENSE.txt",
     "static/media/checkMark.5b2219d1.svg": "/test-applab/static/media/checkMark.5b2219d1.svg",
     "static/media/index.css": "/test-applab/static/media/fira-sans-vietnamese-400-normal.66ebe821.woff2"
   },
   "entrypoints": [
-    "static/js/runtime-main.a1505118.js",
+    "static/js/runtime-main.da06ef22.js",
     "static/css/2.181c7d96.chunk.css",
-    "static/js/2.c6f6a037.chunk.js",
+    "static/js/2.aab6235d.chunk.js",
     "static/css/main.76c43cd8.chunk.css",
-    "static/js/main.3e467ed6.chunk.js"
+    "static/js/main.a7667424.chunk.js"
   ]
 }
