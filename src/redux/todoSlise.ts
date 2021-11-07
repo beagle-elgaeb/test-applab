@@ -71,10 +71,22 @@ export const toDoSlice = createSlice({
         listAnother.splice(1, 0, item);
       }
     },
+    reorder: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{ startIndex: number; endIndex: number; done: boolean }>
+    ) => {
+      const listName = payload.done ? "tasksDone" : "tasks";
+      const list = state[listName];
+
+      const [removed] = list.splice(payload.startIndex, 1);
+      list.splice(payload.endIndex, 0, removed);
+    },
   },
 });
 
-export const { loadState, addTask, remove, update, toggleDone } =
+export const { loadState, addTask, remove, update, toggleDone, reorder } =
   toDoSlice.actions;
 
 export default toDoSlice.reducer;

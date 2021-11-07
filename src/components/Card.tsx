@@ -4,7 +4,7 @@ import styled from "styled-components/macro";
 import checkMarck from "../images/checkMark.svg";
 import { remove, toggleDone, update } from "../redux/toDoSlise";
 import { ReduxState, TaskItem } from "../redux/types";
-import { handlerData, handleValidation } from "./utils";
+import { formatData, validateForm } from "./utils";
 
 function Card({ task, done }: { task: TaskItem; done: boolean }) {
   // Управление инпутами
@@ -22,8 +22,20 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
   // Состояние инпутов
   const [focusIsLost, setFocusIsLost] = useState(false);
 
+  function lossFocus() {
+    setFocusIsLost(true);
+  }
+
   // Состояние задачи (дерактируемая или нет)
   const [updated, setUpdated] = useState(false);
+
+  function handleEdit() {
+    setUpdated(true);
+  }
+
+  function cancelEditing() {
+    setUpdated(false);
+  }
 
   // Использование данных из стейта
   const { tasks, tasksDone } = useSelector((state: ReduxState) => state.toDo);
@@ -45,7 +57,7 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
   }
 
   // Информация о валидности полей
-  const checkValidation = handleValidation(name, description, tasks, tasksDone);
+  const checkValidation = validateForm(name, description, tasks, tasksDone);
 
   return (
     <Container done={done}>
@@ -115,23 +127,10 @@ function Card({ task, done }: { task: TaskItem; done: boolean }) {
           </div>
         )}
 
-        <Time done={done}>{handlerData(task.date)}</Time>
+        <Time done={done}>{formatData(task.date)}</Time>
       </ButtonsAndDate>
     </Container>
   );
-
-  // Вспомогательные функции
-  function handleEdit() {
-    setUpdated(true);
-  }
-
-  function cancelEditing() {
-    setUpdated(false);
-  }
-
-  function lossFocus() {
-    setFocusIsLost(true);
-  }
 }
 
 export default Card;

@@ -19,7 +19,7 @@ const names = [
 // в формате "ЧЧ:ММ", если задача создана сегодня
 // в формате "Д МММ ЧЧ:ММ", если задача создана в течение года
 // в формате "Д МММ ГГГГ ЧЧ:ММ", если задача старше года
-export function handlerData(timestamp: number) {
+export function formatData(timestamp: number) {
   function getMonth(date: Date) {
     return names[date.getMonth()];
   }
@@ -58,7 +58,7 @@ export function handlerData(timestamp: number) {
 // для поля ввода названия задачи, если оно не пустое, не превышает 20 символов, уникальное
 // для поля ввода описания задачи, если оно не пустое, не превышает 70 символов
 // для обоих полей, если они оба валидны
-export function handleValidation(
+export function validateForm(
   name: string,
   description: string,
   tasks: TaskItem[],

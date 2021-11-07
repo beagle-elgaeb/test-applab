@@ -1,10 +1,11 @@
 import { FormEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
-import { addTask } from "../redux/toDoSlise";
+import { addTask, reorder } from "../redux/toDoSlise";
 import { ReduxState } from "../redux/types";
 import Card from "./Card";
-import { handleValidation } from "./utils";
+import { validateForm } from "./utils";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 function Main() {
   // Управление инпутами
@@ -22,6 +23,10 @@ function Main() {
   // Состояние инпутов
   const [focusIsLost, setFocusIsLost] = useState(false);
 
+  function lossFocus() {
+    setFocusIsLost(true);
+  }
+
   // Использование данных из стейта
   const { tasks, tasksDone } = useSelector((state: ReduxState) => state.toDo);
 
@@ -36,7 +41,29 @@ function Main() {
     setFocusIsLost(false);
   }
 
-  const checkValidation = handleValidation(name, description, tasks, tasksDone);
+  const checkValidation = validateForm(name, description, tasks, tasksDone);
+
+  // Перемещение карточек
+  function onDragEnd(
+    result: { source: { index: number }; destination?: { index: number } },
+    done: boolean
+  ) {
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    dispatch(
+      reorder({
+        startIndex: result.source.index,
+        endIndex: result.destination.index,
+        done: done,
+      })
+    );
+  }
 
   return (
     <Container>
@@ -75,23 +102,62 @@ function Main() {
           Добавить
         </Button>
       </form>
-      <div>
-        {tasks.map((task, i) => (
-          <Card key={task.id} task={task} done={false} />
-        ))}
-      </div>
-      <div>
-        {tasksDone.map((task, i) => (
-          <Card key={task.id} task={task} done={true} />
-        ))}
-      </div>
+
+      <DragDropContext onDragEnd={(result) => onDragEnd(result, false)}>
+        <Droppable droppableId="list">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {tasks.map((task, i) => (
+                <Draggable
+                  draggableId={task.id.toString()}
+                  index={i}
+                  key={task.id}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...(provided.draggableProps as any)}
+                      {...provided.dragHandleProps}
+                    >
+                      <Card key={task.id} task={task} done={false} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+
+      <DragDropContext onDragEnd={(result) => onDragEnd(result, true)}>
+        <Droppable droppableId="list">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {tasksDone.map((task, i) => (
+                <Draggable
+                  draggableId={task.id.toString()}
+                  index={i}
+                  key={task.id}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...(provided.draggableProps as any)}
+                      {...provided.dragHandleProps}
+                    >
+                      <Card key={task.id} task={task} done={true} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </Container>
   );
-
-  // Вспомогательные функции
-  function lossFocus() {
-    setFocusIsLost(true);
-  }
 }
 
 export default Main;
