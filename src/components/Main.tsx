@@ -101,7 +101,6 @@ function Main() {
           required
           valid={focusIsLost ? checkValidation.descriptionIsValid : true}
         />
-
         <Button
           type="submit"
           disabled={focusIsLost ? !checkValidation.isValid : false}
