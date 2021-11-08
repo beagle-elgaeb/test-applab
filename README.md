@@ -18,6 +18,8 @@ _[Ссылка на приложение](https://beagle-elgaeb.github.io/test-a
   <a href="https://webpack.js.org/"><img src="readme/icon-webpack.svg" alt="WebPack"></a>
     <img src="readme/icon-whitespace-5px.svg"/>
   <a href="https://styled-components.com/"><img src="readme/icon-styled-components.svg" alt="Styled-components"></a>
+    <img src="readme/icon-whitespace-5px.svg"/>
+  <a href="https://github.com/atlassian/react-beautiful-dnd"><img src="readme/icon-react-beautiful-dnd.svg" alt="React-beautiful-dnd"></a>
 </p>
 
 ## Задание
@@ -34,12 +36,14 @@ _[Ссылка на приложение](https://beagle-elgaeb.github.io/test-a
 Также:
 
 - проработан UX (изменеие внешнего вида кнопок, инпутов и карточек при наведении и в зависимости от состояния валидации);
+- используется d'n'd библиотека [React-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd "Документация");
 - используется css-in-js библиотека [styled-components](https://styled-components.com/ "Документация");
 - [страница размещена на GitHub Pages](https://beagle-elgaeb.github.io/test-applab/ "Выполненое тестовое задание").
 
 ## Возможные улучшения
 
-- не предполагаются.
+- попробовать писать тесты;
+- и больше не предполагаются.
 
 ## Директории
 
