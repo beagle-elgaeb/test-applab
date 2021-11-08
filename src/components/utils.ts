@@ -15,15 +15,15 @@ const names = [
   "дек",
 ];
 
+export function getMonth(date: Date) {
+  return names[date.getMonth()];
+}
+
 // Ф-я handlerData возвращает дату-время:
 // в формате "ЧЧ:ММ", если задача создана сегодня
 // в формате "Д МММ ЧЧ:ММ", если задача создана в течение года
 // в формате "Д МММ ГГГГ ЧЧ:ММ", если задача старше года
 export function formatData(timestamp: number) {
-  function getMonth(date: Date) {
-    return names[date.getMonth()];
-  }
-
   const now = new Date();
 
   const dayNow = now.getDate().toString();
